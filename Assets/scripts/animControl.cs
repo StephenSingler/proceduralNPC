@@ -3,40 +3,62 @@ using UnityEngine;
 public class animControl : MonoBehaviour
 {
     public float speed = 5f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public float rotationSpeed = 100f;
+
+    private Animator anim;
+
     void Start()
     {
-        
+        anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
-            GetComponent<Animator>().SetBool("walk", true);
-            transform.Translate(new Vector3(0, 0, Input.GetAxis("Vertical") * Time.deltaTime * speed));
-            transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * 100 * speed, 0));
-        } else {
-            GetComponent<Animator>().SetBool("walk", false);
-        }
+        HandleMovement();
+        HandleAnimations();
+        HandleTriggers();
+    }
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            GetComponent<Animator>().SetTrigger("jump");
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            GetComponent<Animator>().SetTrigger("angry");
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            GetComponent<Animator>().SetTrigger("happy");
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            GetComponent<Animator>().SetTrigger("talking");
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            GetComponent<Animator>().SetTrigger("idle");
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            GetComponent<Animator>();
-        }
+    void HandleMovement()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        // Move forward/back
+        transform.Translate(Vector3.forward * v * speed * Time.deltaTime);
+
+        // Rotate left/right
+        transform.Rotate(Vector3.up * h * rotationSpeed * Time.deltaTime);
+    }
+
+    void HandleAnimations()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        bool isMoving = Mathf.Abs(h) > 0.01f || Mathf.Abs(v) > 0.01f;
+        anim.SetBool("walk", isMoving);
+    }
+
+    void HandleTriggers()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            anim.SetTrigger("jump");
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            anim.SetTrigger("angry");
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            anim.SetTrigger("happy");
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            anim.SetTrigger("talking");
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            anim.SetTrigger("idle");
+
+        // You can define something for Alpha5 if needed
+        // if (Input.GetKeyDown(KeyCode.Alpha5))
+        //     anim.SetTrigger("something");
     }
 }
