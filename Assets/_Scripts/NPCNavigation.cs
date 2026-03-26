@@ -14,7 +14,7 @@ public class NPCPatrol : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         GoToNextWaypoint();
-        anim.SetBool("Walk", true);
+        anim.SetBool("walk", true);
     }
 
     void Update()
@@ -24,9 +24,12 @@ public class NPCPatrol : MonoBehaviour
     if (distance < detectionRange)
     {
         agent.SetDestination(player.position);
+        anim.SetBool("walk", false);
+        anim.SetTrigger("angry");
     }
     else if (!agent.pathPending && agent.remainingDistance < 0.5f)
     {
+        anim.SetBool("walk", true);
         GoToNextWaypoint();
     }
     }
